@@ -37,9 +37,10 @@ Render generará automáticamente `APP_KEY` y enlazará `DB_URL` con PostgreSQL.
 | `DB_CONNECTION` | `pgsql` |
 | `DB_URL` | **Internal Database URL** de PostgreSQL en Render |
 | `LOG_CHANNEL` | `stderr` |
-| `SESSION_DRIVER` | `database` |
-| `CACHE_STORE` | `database` |
-| `QUEUE_CONNECTION` | `database` |
+| `SESSION_DRIVER` | `file` |
+| `CACHE_STORE` | `file` |
+| `QUEUE_CONNECTION` | `sync` |
+| `DB_SSLMODE` | `require` |
 
 4. Conecta la base de datos al servicio (Render puede inyectar `DB_URL` desde el panel).
 
