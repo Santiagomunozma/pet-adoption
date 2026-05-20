@@ -30,10 +30,9 @@
             <div class="mt-6">
                 <x-input-label for="password" value="Contraseña" class="sr-only" />
 
-                <x-text-input
+                <x-password-input
                     id="password"
                     name="password"
-                    type="password"
                     class="mt-1 block w-full border-purple-200 focus:border-purple-500 focus:ring-purple-500"
                     placeholder="Contraseña"
                 />

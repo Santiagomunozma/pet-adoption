@@ -18,8 +18,10 @@ services:
         value: production
       - key: APP_DEBUG
         value: "false"
+      # Debe ser la salida de: php artisan key:generate --show
+      # (generateValue de Render NO produce el formato base64: que exige Laravel)
       - key: APP_KEY
-        generateValue: true
+        sync: false
       - key: LOG_CHANNEL
         value: stderr
       - key: DB_CONNECTION

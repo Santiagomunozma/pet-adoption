@@ -19,9 +19,7 @@
         <div class="mt-4">
             <x-input-label for="password" value="Contraseña" class="text-purple-700" />
 
-            <x-text-input id="password" class="block mt-1 w-full border-purple-200 focus:border-purple-500 focus:ring-purple-500"
-                            type="password"
-                            name="password"
+            <x-password-input id="password" name="password" class="block mt-1 w-full border-purple-200 focus:border-purple-500 focus:ring-purple-500"
                             required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -30,9 +28,8 @@
         <div class="mt-4">
             <x-input-label for="password_confirmation" value="Confirmar contraseña" class="text-purple-700" />
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full border-purple-200 focus:border-purple-500 focus:ring-purple-500"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+            <x-password-input id="password_confirmation" name="password_confirmation" class="block mt-1 w-full border-purple-200 focus:border-purple-500 focus:ring-purple-500"
+                            required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>

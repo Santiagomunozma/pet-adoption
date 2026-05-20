@@ -18,7 +18,17 @@ Esta aplicación es **Laravel 13** con **PostgreSQL** en producción. Los archiv
    - Servicio web Docker (`pet-adoption`)
 5. Pulsa **Apply** y espera el primer deploy (puede tardar varios minutos).
 
-Render generará automáticamente `APP_KEY` y enlazará `DB_URL` con PostgreSQL.
+**Importante:** debes crear `APP_KEY` manualmente (ver abajo). Render **no** puede generarla automáticamente con el formato que Laravel exige.
+
+### Crear APP_KEY (obligatorio)
+
+En tu PC, dentro del proyecto:
+
+```bash
+php artisan key:generate --show
+```
+
+Copia la línea completa (empieza por `base64:`) y en Render → tu servicio → **Environment** → `APP_KEY` → pega el valor → **Save Changes** → redeploy.
 
 ## Opción B — Manual
 

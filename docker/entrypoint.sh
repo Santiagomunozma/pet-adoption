@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+if [[ -z "${APP_KEY:-}" ]] || [[ ! "${APP_KEY}" =~ ^base64: ]]; then
+    echo "ERROR: APP_KEY invalida o ausente."
+    echo "Genera una con: php artisan key:generate --show"
+    echo "Y pegala en Render > Environment > APP_KEY"
+    exit 1
+fi
+
 php artisan storage:link --force 2>/dev/null || true
 
 if [ ! -f public/build/manifest.json ]; then
