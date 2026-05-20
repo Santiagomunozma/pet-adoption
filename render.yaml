@@ -1,0 +1,36 @@
+# Blueprint de Render: https://render.com/docs/blueprint-spec
+# Despliega con "New > Blueprint" y conecta este repositorio.
+
+databases:
+  - name: pet-adoption-db
+    plan: free
+    databaseName: pet_adoption
+    user: pet_adoption
+
+services:
+  - type: web
+    name: pet-adoption
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: pet-adoption-db
+          property: connectionString
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
