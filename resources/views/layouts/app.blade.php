@@ -52,6 +52,7 @@
                         <div>
                             <h4 class="font-bold text-gray-800 mb-4">Desarrollado por:</h4>
                             <p class="text-purple-600 font-semibold">Santiago Macchi Muñoz</p>
+                            <p class="text-purple-600 font-semibold">Stiven Herrera</p>
                             <p class="text-purple-600 font-semibold">Sneyder Marin</p>
                             <p class="text-gray-400 text-xs mt-1">Proyecto de Ingeniería de Sistemas</p>
                         </div>
