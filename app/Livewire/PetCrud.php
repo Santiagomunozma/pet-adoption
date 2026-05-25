@@ -2,11 +2,11 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Pet;
 use App\Models\Species;
+use App\Services\PetImageStorage;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class PetCrud extends Component
 {
@@ -34,13 +34,13 @@ class PetCrud extends Component
         'image' => 'nullable|image|max:2048', 
     ];
 
-    public function store()
+    public function store(PetImageStorage $petImages)
     {
         $this->validate();
 
         $imagePath = null;
         if ($this->image) {
-            $imagePath = $this->image->store('pets', 'public');
+            $imagePath = $petImages->store($this->image);
         }
 
         Pet::create([
@@ -75,18 +75,16 @@ class PetCrud extends Component
         $this->isEditMode = true;
     }
 
-    public function update()
+    public function update(PetImageStorage $petImages)
     {
         $this->validate();
 
         $pet = Pet::findOrFail($this->pet_id);
-        $imagePath = $pet->image_path; 
+        $imagePath = $pet->image_path;
 
         if ($this->image) {
-            if ($pet->image_path) {
-                Storage::disk('public')->delete($pet->image_path);
-            }
-            $imagePath = $this->image->store('pets', 'public');
+            $petImages->delete($pet->image_path);
+            $imagePath = $petImages->store($this->image);
         }
 
         $pet->update([
@@ -105,14 +103,12 @@ class PetCrud extends Component
 $this->js("Swal.fire({title: '¡Éxito!', text: '¡Mascota actualizada correctamente!', icon: 'info', confirmButtonColor: '#16a34a'})");
     }
 
-    public function delete($id)
+    public function delete($id, PetImageStorage $petImages)
     {
         $pet = Pet::findOrFail($id);
-        
-        if ($pet->image_path) {
-            Storage::disk('public')->delete($pet->image_path);
-        }
-        
+
+        $petImages->delete($pet->image_path);
+
         $pet->delete();
         // Alerta elegante
         $this->actualizarEstadisticas();
@@ -144,6 +140,11 @@ $this->js("Swal.fire({title: '¡Éxito!', text: '¡Mascota actualizada correctam
 
         return view('livewire.pet-crud', compact('pets', 'species'));
     }
+    public function getOldImageUrlProperty(): ?string
+    {
+        return app(PetImageStorage::class)->url($this->old_image);
+    }
+
     public function actualizarEstadisticas()
     {
         $species = \App\Models\Species::withCount('pets')->get();

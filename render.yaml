@@ -38,3 +38,6 @@ services:
         value: file
       - key: QUEUE_CONNECTION
         value: sync
+      # Cloudinary: pega tu CLOUDINARY_URL desde el dashboard (API Keys)
+      - key: CLOUDINARY_URL
+        sync: false

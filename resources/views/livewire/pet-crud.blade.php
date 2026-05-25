@@ -62,10 +62,10 @@
                             <p class="text-xs text-gray-500 mb-1">Previsualización:</p>
                             <img src="{{ $image->temporaryUrl() }}" class="w-24 h-24 object-cover rounded-lg border">
                         </div>
-                    @elseif($old_image)
+                    @elseif($this->oldImageUrl)
                         <div>
                             <p class="text-xs text-gray-500 mb-1">Imagen Actual:</p>
-                            <img src="{{ asset('storage/' . $old_image) }}" class="w-24 h-24 object-cover rounded-lg border">
+                            <img src="{{ $this->oldImageUrl }}" alt="Imagen actual" class="w-24 h-24 object-cover rounded-lg border">
                         </div>
                     @endif
                 </div>
@@ -100,8 +100,8 @@
                 @foreach($pets as $pet)
                 <tr class="hover:bg-gray-50 transition-colors">
                     <td class="py-3 px-4">
-                        @if($pet->image_path)
-                            <img src="{{ asset('storage/' . $pet->image_path) }}" class="w-16 h-16 object-cover rounded-full border shadow-sm">
+                        @if($pet->image_url)
+                            <img src="{{ $pet->image_url }}" alt="{{ $pet->name }}" class="w-16 h-16 object-cover rounded-full border shadow-sm">
                         @else
                             <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-gray-400 text-xs">Sin foto</div>
                         @endif

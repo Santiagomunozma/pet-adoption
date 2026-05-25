@@ -61,10 +61,61 @@ Copia la línea completa (empieza por `base64:`) y en Render → tu servicio →
 - Las migraciones se ejecutan solas en cada arranque (`docker/entrypoint.sh`).
 - Registra un usuario en `/register` para usar el panel (mascotas, especies, etc.).
 
+## Fotos de mascotas (Cloudinary)
+
+Las imágenes **no** van en PostgreSQL: en la base solo se guarda el identificador (`image_path`). Los archivos se suben a **Cloudinary** para que sobrevivan a cada redeploy en Render.
+
+### 1. Vincular tu cuenta de Cloudinary
+
+1. Entra en [Cloudinary Console](https://console.cloudinary.com/).
+2. En el panel izquierdo: **Home** o **Dashboard**.
+3. Busca la sección **API Keys** (o **Product environment credentials**).
+4. Copia el valor **CLOUDINARY_URL**. Tiene este formato:
+   ```
+   cloudinary://123456789012345:abcdefghijklmnopqrstuvwxyz@tu-cloud-name
+   ```
+   No compartas esta URL en GitHub; es tu clave secreta.
+
+### 2. Configurar en tu PC (desarrollo local)
+
+En el archivo `.env` del proyecto (no subas este archivo al repo):
+
+```env
+CLOUDINARY_URL=cloudinary://TU_API_KEY:TU_API_SECRET@TU_CLOUD_NAME
+```
+
+Opcional (carpeta dentro de Cloudinary):
+
+```env
+CLOUDINARY_FOLDER=pet-adoption/pets
+```
+
+Reinicia el servidor si lo tienes corriendo (`php artisan serve`).
+
+### 3. Configurar en Render (producción)
+
+1. Render → servicio **pet-adoption** → **Environment**.
+2. **Add Environment Variable**:
+   - **Key:** `CLOUDINARY_URL`
+   - **Value:** pega la misma URL del paso 1.
+3. **Save Changes** → el servicio hará **redeploy** solo.
+4. Vuelve a **subir las fotos** de las mascotas que ya tenías: las rutas antiguas en la base apuntaban al disco efímero del contenedor y esas imágenes ya no existen.
+
+### 4. Comprobar que funciona
+
+1. Inicia sesión en la app.
+2. Registra o edita una mascota con una foto nueva.
+3. En Cloudinary → **Media Library** deberías ver la carpeta `pet-adoption/pets` (o la que definiste en `CLOUDINARY_FOLDER`).
+4. Haz un redeploy en Render y verifica que la foto sigue visible.
+
+### Sin Cloudinary en local
+
+Si no defines `CLOUDINARY_URL` en `.env`, las fotos se guardan en `storage/app/public/pets` (como antes). En **Render** debes definir siempre `CLOUDINARY_URL`.
+
 ## Plan Free — avisos
 
 - El servicio **se apaga** tras inactividad; el primer acceso puede tardar ~30–60 s.
-- El disco del contenedor es **efímero**: no guardes archivos importantes solo en `storage/` local.
+- El disco del contenedor es **efímero**: las fotos deben ir a Cloudinary (ya integrado en el código).
 - PostgreSQL Free tiene límites de tamaño; suficiente para desarrollo/demo.
 
 ## Comprobar en local (opcional)
@@ -84,5 +135,6 @@ En producción usa siempre PostgreSQL (`DB_CONNECTION=pgsql` + `DB_URL`).
 | CSS/JS rotos | Revisa que el build de Vite terminó en el log de Docker (`npm run build`) |
 | Error de sesión/cache | `SESSION_DRIVER` y `CACHE_STORE` deben ser `database` y las migraciones deben haber corrido |
 | Mixed content (HTTP/HTTPS) | Ya está `URL::forceScheme('https')` en producción |
+| Fotos rotas tras deploy | Falta `CLOUDINARY_URL` en Render o hay rutas viejas; sube las fotos de nuevo |
 
 Documentación oficial: [Deploy Laravel on Render](https://render.com/docs/deploy-php-laravel-docker)
