@@ -36,7 +36,7 @@ class PetImageStorage
         }
 
         if ($this->isCloudinaryEnabled() && str_starts_with($storedPath, config('cloudinary.folder').'/')) {
-            $this->cloudinary()->uploadApi->destroy($storedPath);
+            $this->cloudinary()->uploadApi()->destroy($storedPath);
 
             return;
         }
@@ -63,7 +63,7 @@ class PetImageStorage
 
     protected function storeOnCloudinary(UploadedFile|TemporaryUploadedFile $file): string
     {
-        $result = $this->cloudinary()->uploadApi->upload(
+        $result = $this->cloudinary()->uploadApi()->upload(
             $file->getRealPath(),
             [
                 'folder' => config('cloudinary.folder'),
