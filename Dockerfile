@@ -46,4 +46,9 @@ ENV APP_ENV=production
 ENV APP_DEBUG=false
 ENV LOG_CHANNEL=stderr
 
+# Crear la carpeta temporal que Livewire necesita con sus respectivos permisos
+RUN mkdir -p /var/www/html/storage/app/livewire-tmp \
+    && chown -R www-data:www-data /var/www/html/storage \
+    && chmod -R 775 /var/www/html/storage
+    
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
