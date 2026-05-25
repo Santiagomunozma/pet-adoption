@@ -77,9 +77,10 @@ class PetImageStorage
     protected function cloudinary(): Cloudinary
     {
         if ($url = config('cloudinary.url')) {
-            return new Cloudinary(['url' => $url]);
+            //  ¡PASAMOS EL STRING DIRECTO SIN EL ARRAY ENVOLVENTE!
+            return new Cloudinary($url); 
         }
-
+    
         return new Cloudinary([
             'cloud' => [
                 'cloud_name' => config('cloudinary.cloud_name'),
