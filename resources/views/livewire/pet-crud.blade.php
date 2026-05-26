@@ -48,6 +48,7 @@
 
             {{-- Subida de Imagen Mejorada con Barra de Progreso --}}
 <div class="mb-4" 
+   wire:key="upload-box-{{ $pet_id ?? 'create' }}-{{ $iteration }}"
      x-data="{ isUploading: false, progress: 0 }" 
      x-on:livewire-upload-start="isUploading = true" 
      x-on:livewire-upload-finish="isUploading = false" 
@@ -56,7 +57,12 @@
     
     <label class="block text-gray-700 text-sm font-bold mb-2">Foto de la Mascota</label>
     
-    <input type="file" wire:model="image" id="upload-{{ $iteration }}" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+    <input 
+    type="file" 
+    wire:model="image" 
+    id="upload-{{ $iteration }}" 
+    accept="image/png, image/jpeg, image/webp" {{-- 🔒 EL CANDADO EN LA PUERTA --}}
+    class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
     
     {{-- Barra de Progreso Animada --}}
     <div x-show="isUploading" class="mt-3" x-cloak>
