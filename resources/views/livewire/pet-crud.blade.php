@@ -1,6 +1,6 @@
 <div>
     {{-- Formulario para Mascotas --}}
-    <form wire:submit.prevent="{{ $isEditMode ? 'update' : 'store' }}" class="mb-6 bg-white p-6 rounded-lg border border-gray-200 shadow-md">
+    <form wire:submit.prevent="save" class="mb-6 bg-white p-6 rounded-lg border border-gray-200 shadow-md">
         <h3 class="text-xl font-bold mb-4 text-gray-800">
             {{ $isEditMode ? '📝 Editar Mascota' : '🐾 Registrar Nueva Mascota' }}
         </h3>
@@ -98,7 +98,7 @@
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @foreach($pets as $pet)
-                <tr class="hover:bg-gray-50 transition-colors">
+                <tr wire:key="pet-{{ $pet->id }}" class="hover:bg-gray-50 transition-colors">
                     <td class="py-3 px-4">
                         @if($pet->image_url)
                             <img src="{{ $pet->image_url }}" alt="{{ $pet->name }}" class="w-16 h-16 object-cover rounded-full border shadow-sm">

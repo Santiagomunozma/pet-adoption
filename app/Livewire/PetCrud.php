@@ -102,6 +102,14 @@ class PetCrud extends Component
         $this->actualizarEstadisticas();
 $this->js("Swal.fire({title: '¡Éxito!', text: '¡Mascota actualizada correctamente!', icon: 'info', confirmButtonColor: '#16a34a'})");
     }
+    public function save(PetImageStorage $petImages)
+{
+    if ($this->isEditMode) {
+        $this->update($petImages);
+    } else {
+        $this->store($petImages);
+    }
+}
 
     public function delete($id, PetImageStorage $petImages)
     {
