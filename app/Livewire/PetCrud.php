@@ -148,6 +148,10 @@ $this->js("Swal.fire({title: '¡Éxito!', text: '¡Mascota actualizada correctam
 
         return view('livewire.pet-crud', compact('pets', 'species'));
     }
+    public function updatedImage()
+{
+    $this->validateOnly('image');
+}
     public function getOldImageUrlProperty(): ?string
     {
         return app(PetImageStorage::class)->url($this->old_image);

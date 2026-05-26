@@ -46,30 +46,51 @@
                 </select>
             </div>
 
-            {{-- Subida de Imagen --}}
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Foto de la Mascota</label>
-                {{-- Aquí usamos la variable iteration para obligar la limpieza --}}
-                <input type="file" wire:model="image" id="upload-{{ $iteration }}" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                
-                <div wire:loading wire:target="image" class="text-blue-500 text-xs mt-2">Subiendo imagen...</div>
-                @error('image') <span class="text-red-500 text-xs italic">{{ $message }}</span> @enderror
-                
-                {{-- Previsualización --}}
-                <div class="mt-4 flex gap-4">
-                    @if ($image)
-                        <div>
-                            <p class="text-xs text-gray-500 mb-1">Previsualización:</p>
-                            <img src="{{ $image->temporaryUrl() }}" class="w-24 h-24 object-cover rounded-lg border">
-                        </div>
-                    @elseif($this->oldImageUrl)
-                        <div>
-                            <p class="text-xs text-gray-500 mb-1">Imagen Actual:</p>
-                            <img src="{{ $this->oldImageUrl }}" alt="Imagen actual" class="w-24 h-24 object-cover rounded-lg border">
-                        </div>
-                    @endif
-                </div>
+            {{-- Subida de Imagen Mejorada con Barra de Progreso --}}
+<div class="mb-4" 
+     x-data="{ isUploading: false, progress: 0 }" 
+     x-on:livewire-upload-start="isUploading = true" 
+     x-on:livewire-upload-finish="isUploading = false" 
+     x-on:livewire-upload-error="isUploading = false; Swal.fire({title: '¡Archivo Inválido!', text: 'El archivo supera el límite permitido del servidor o está corrupto.', icon: 'error', confirmButtonColor: '#ef4444'})" 
+     x-on:livewire-upload-progress="progress = $event.detail.progress">
+    
+    <label class="block text-gray-700 text-sm font-bold mb-2">Foto de la Mascota</label>
+    
+    <input type="file" wire:model="image" id="upload-{{ $iteration }}" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+    
+    {{-- Barra de Progreso Animada --}}
+    <div x-show="isUploading" class="mt-3" x-cloak>
+        <div class="flex justify-between mb-1">
+            <span class="text-xs font-medium text-blue-700 animate-pulse">Subiendo archivo al servidor...</span>
+            <span class="text-xs font-medium text-blue-700" x-text="progress + '%'"></span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-150" x-bind:style="'width: ' + progress + '%'"></div>
+        </div>
+    </div>
+
+    {{-- Mensaje de Error de Validación de Laravel (Tipo de archivo / Max 2MB) --}}
+    @error('image') 
+        <div class="mt-2 bg-red-50 border-l-4 border-red-500 p-2 text-red-700 text-xs italic">
+            ⚠️ {{ $message }}
+        </div> 
+    @enderror
+    
+    {{-- Previsualización --}}
+    <div class="mt-4 flex gap-4">
+        @if ($image && ! $errors->has('image'))
+            <div>
+                <p class="text-xs text-gray-500 mb-1">Previsualización:</p>
+                <img src="{{ $image->temporaryUrl() }}" class="w-24 h-24 object-cover rounded-lg border shadow-sm">
             </div>
+        @elseif($this->oldImageUrl)
+            <div>
+                <p class="text-xs text-gray-500 mb-1">Imagen Actual:</p>
+                <img src="{{ $this->oldImageUrl }}" alt="Imagen actual" class="w-24 h-24 object-cover rounded-lg border shadow-sm">
+            </div>
+        @endif
+    </div>
+</div>
         </div>
 
         <div class="flex gap-2 mt-4">
